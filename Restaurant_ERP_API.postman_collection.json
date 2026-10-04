@@ -1,0 +1,1076 @@
+{
+	"info": {
+		"_postman_id": "restaurant-erp-enterprise-collection-2026",
+		"name": "Restaurant ERP System - Complete API Collection",
+		"description": "Bộ Postman Collection toàn diện cho hệ thống Restaurant ERP bao gồm đầy đủ 9 module nghiệp vụ, kiểm duyệt Bean Validation, tự động lưu JWT token và các kịch bản kiểm thử lỗi Validation (Negative Cases).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "current_branch_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "created_branch_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "created_area_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "created_table_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "created_category_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "created_menu_item_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "created_order_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "created_booking_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "created_ingredient_id",
+			"value": "1",
+			"type": "string"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "1. Authentication & Users",
+			"description": "Quản lý xác thực, cấp token, đăng ký và quản lý tài khoản người dùng",
+			"item": [
+				{
+					"name": "1.1 Login (Tự động lưu Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.token) {",
+									"    pm.collectionVariables.set(\"jwt_token\", jsonData.data.token);",
+									"    console.log(\"Saved JWT Token:\", jsonData.data.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "login"]
+						}
+					}
+				},
+				{
+					"name": "1.2 Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"staff_hcm01\",\n  \"email\": \"staff_hcm01@restaurant.vn\",\n  \"password\": \"Password123!\",\n  \"fullName\": \"Trần Thị Thu Hà\",\n  \"role\": \"STAFF\",\n  \"pinCode\": \"1234\",\n  \"branchId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "register"]
+						}
+					}
+				},
+				{
+					"name": "1.3 Get Current User Profile (/me)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "me"]
+						}
+					}
+				},
+				{
+					"name": "1.4 Get Users by Branch",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users?branchId={{current_branch_id}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"],
+							"query": [
+								{ "key": "branchId", "value": "{{current_branch_id}}" }
+							]
+						}
+					}
+				},
+				{
+					"name": "1.5 Refresh Token",
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{jwt_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/refresh",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "refresh"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Branch Management",
+			"description": "Quản lý chuỗi chi nhánh nhà hàng",
+			"item": [
+				{
+					"name": "2.1 Get All Branches",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/branches",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "branches"]
+						}
+					}
+				},
+				{
+					"name": "2.2 Get Branch by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/branches/{{created_branch_id}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "branches", "{{created_branch_id}}"]
+						}
+					}
+				},
+				{
+					"name": "2.3 Create Branch",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.id) {",
+									"    pm.collectionVariables.set(\"created_branch_id\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"CN-Q1\",\n  \"name\": \"Chi nhánh Quận 1 - Nguyễn Huệ\",\n  \"address\": \"68 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh\",\n  \"phone\": \"02838221199\",\n  \"email\": \"quan1@restaurant.vn\",\n  \"taxCode\": \"0315891234-002\",\n  \"openingTime\": \"08:00:00\",\n  \"closingTime\": \"23:00:00\",\n  \"managerName\": \"Nguyễn Hoàng Nam\",\n  \"totalTables\": 30,\n  \"status\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/branches",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "branches"]
+						}
+					}
+				},
+				{
+					"name": "2.4 Update Branch",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"CN-Q1\",\n  \"name\": \"Chi nhánh Quận 1 - Nguyễn Huệ (VIP Lounge)\",\n  \"address\": \"68 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh\",\n  \"phone\": \"02838221199\",\n  \"email\": \"quan1@restaurant.vn\",\n  \"taxCode\": \"0315891234-002\",\n  \"openingTime\": \"08:00:00\",\n  \"closingTime\": \"23:30:00\",\n  \"managerName\": \"Nguyễn Hoàng Nam\",\n  \"totalTables\": 35,\n  \"status\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/branches/{{created_branch_id}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "branches", "{{created_branch_id}}"]
+						}
+					}
+				},
+				{
+					"name": "2.5 Delete Branch",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/branches/{{created_branch_id}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "branches", "{{created_branch_id}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Table & Area Layout",
+			"description": "Quản lý sơ đồ bàn và khu vực nhà hàng",
+			"item": [
+				{
+					"name": "3.1 Get All Areas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/tables/areas",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "tables", "areas"]
+						}
+					}
+				},
+				{
+					"name": "3.2 Create Area",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.id) {",
+									"    pm.collectionVariables.set(\"created_area_id\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Tầng 2 - Phòng VIP\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/tables/areas",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "tables", "areas"]
+						}
+					}
+				},
+				{
+					"name": "3.3 Get Tables in Branch",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/tables",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "tables"]
+						}
+					}
+				},
+				{
+					"name": "3.4 Create Table",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.id) {",
+									"    pm.collectionVariables.set(\"created_table_id\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"areaId\": {{created_area_id}},\n  \"name\": \"Bàn VIP 01\",\n  \"tableNumber\": \"VIP-01\",\n  \"capacity\": 8,\n  \"status\": \"AVAILABLE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/tables",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "tables"]
+						}
+					}
+				},
+				{
+					"name": "3.5 Update Table Status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/tables/{{created_table_id}}/status?status=OCCUPIED",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "tables", "{{created_table_id}}", "status"],
+							"query": [
+								{ "key": "status", "value": "OCCUPIED" }
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Menu & Catalog",
+			"description": "Quản lý danh mục món ăn và sản phẩm thực đơn",
+			"item": [
+				{
+					"name": "4.1 Get Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/menu/categories",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "menu", "categories"]
+						}
+					}
+				},
+				{
+					"name": "4.2 Create Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.id) {",
+									"    pm.collectionVariables.set(\"created_category_id\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Món Nướng Đặc Biệt\",\n  \"description\": \"Các món nướng than hoa cao cấp\",\n  \"displayOrder\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/menu/categories",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "menu", "categories"]
+						}
+					}
+				},
+				{
+					"name": "4.3 Get Menu Items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/menu/items",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "menu", "items"]
+						}
+					}
+				},
+				{
+					"name": "4.4 Create Menu Item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.id) {",
+									"    pm.collectionVariables.set(\"created_menu_item_id\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"categoryId\": {{created_category_id}},\n  \"name\": \"Bò Wagyu Nướng Tảng\",\n  \"code\": \"FD-WAGYU-01\",\n  \"description\": \"Thịt bò Wagyu vân mỡ A5 hảo hạng kèm sốt tiêu đen\",\n  \"price\": 580000,\n  \"unit\": \"Phần\",\n  \"imageUrl\": \"https://images.unsplash.com/photo-1544025162-d76694265947\",\n  \"isAvailable\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/menu/items",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "menu", "items"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Table Reservation",
+			"description": "Đặt bàn trước, xác nhận, tiếp nhận và hủy bàn",
+			"item": [
+				{
+					"name": "5.1 Get Bookings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/reservations/bookings",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reservations", "bookings"]
+						}
+					}
+				},
+				{
+					"name": "5.2 Create Booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.id) {",
+									"    pm.collectionVariables.set(\"created_booking_id\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tableId\": {{created_table_id}},\n  \"customerName\": \"Lê Văn An\",\n  \"customerPhone\": \"0988776655\",\n  \"bookingTime\": \"2026-10-15T19:00:00+07:00\",\n  \"partySize\": 4,\n  \"depositAmount\": 200000,\n  \"specialRequest\": \"Bàn yên tĩnh tiếp đối tác, chuẩn bị sẵn hoa\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/reservations/bookings",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reservations", "bookings"]
+						}
+					}
+				},
+				{
+					"name": "5.3 Update Booking Status (CONFIRMED)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reservations/bookings/{{created_booking_id}}/status?status=CONFIRMED",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reservations", "bookings", "{{created_booking_id}}", "status"],
+							"query": [
+								{ "key": "status", "value": "CONFIRMED" }
+							]
+						}
+					}
+				},
+				{
+					"name": "5.4 Cancel Booking",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reservations/bookings/{{created_booking_id}}/cancel?reason=Khách đổi lịch công tác",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reservations", "bookings", "{{created_booking_id}}", "cancel"],
+							"query": [
+								{ "key": "reason", "value": "Khách đổi lịch công tác" }
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "6. POS & Order Billing",
+			"description": "Gọi món, quản lý đơn hàng bàn, tách bàn, gộp bàn và thanh toán hóa đơn",
+			"item": [
+				{
+					"name": "6.1 Create Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.id) {",
+									"    pm.collectionVariables.set(\"created_order_id\", jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tableId\": {{created_table_id}},\n  \"orderType\": \"DINE_IN\",\n  \"guestCount\": 4,\n  \"note\": \"Bàn VIP ăn tối\",\n  \"items\": [\n    {\n      \"menuItemId\": {{created_menu_item_id}},\n      \"quantity\": 2,\n      \"unitPrice\": 580000,\n      \"note\": \"Nướng chín vừa (Medium Rare)\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pos/orders",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pos", "orders"]
+						}
+					}
+				},
+				{
+					"name": "6.2 Get Active Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/pos/orders/active",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pos", "orders", "active"]
+						}
+					}
+				},
+				{
+					"name": "6.3 Get Order by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pos/orders/{{created_order_id}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pos", "orders", "{{created_order_id}}"]
+						}
+					}
+				},
+				{
+					"name": "6.4 Add Item to Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"menuItemId\": {{created_menu_item_id}},\n  \"quantity\": 1,\n  \"unitPrice\": 580000,\n  \"note\": \"Gọi thêm 1 phần nướng chín kỹ\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pos/orders/{{created_order_id}}/items",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pos", "orders", "{{created_order_id}}", "items"]
+						}
+					}
+				},
+				{
+					"name": "6.5 Process Payment (Thanh toán hóa đơn)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": {{created_order_id}},\n  \"amount\": 1740000,\n  \"method\": \"CREDIT_CARD\",\n  \"transactionReference\": \"POS-TXN-998877\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pos/payments",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pos", "payments"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "7. Inventory & Warehouse",
+			"description": "Nguyên liệu danh mục, tồn kho chi nhánh, định lượng (Recipe), nhập kho và cấp phát bếp đầu ngày",
+			"item": [
+				{
+					"name": "7.1 Get Ingredient Masters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory/ingredients/masters",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory", "ingredients", "masters"]
+						}
+					}
+				},
+				{
+					"name": "7.2 Create Ingredient Master",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sku\": \"RAW-BEEF-A5\",\n  \"name\": \"Thịt Bò Thăn Wagyu A5\",\n  \"baseUnit\": \"kg\",\n  \"category\": \"Thịt tươi sống\",\n  \"standardCostPrice\": 950000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory/ingredients/masters",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory", "ingredients", "masters"]
+						}
+					}
+				},
+				{
+					"name": "7.3 Get Stock Ingredients in Branch",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory/ingredients",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory", "ingredients"]
+						}
+					}
+				},
+				{
+					"name": "7.4 Stock Import (Nhập kho nguyên liệu)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ingredientId\": 1,\n  \"quantity\": 25.5,\n  \"unitPrice\": 950000,\n  \"note\": \"Nhập hàng thịt tươi giao sáng sớm\",\n  \"supplierBatchNumber\": \"LOT-2026-10-01\",\n  \"expiryDate\": \"2026-10-10\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory/stock/import",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory", "stock", "import"]
+						}
+					}
+				},
+				{
+					"name": "7.5 Get Daily Kitchen Allocations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory/allocations?branchId={{current_branch_id}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory", "allocations"],
+							"query": [
+								{ "key": "branchId", "value": "{{current_branch_id}}" }
+							]
+						}
+					}
+				},
+				{
+					"name": "7.6 Create Daily Batch Allocation (Xuất cấp đầu ngày cho bếp)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"branchId\": {{current_branch_id}},\n  \"allocationDate\": \"2026-10-02\",\n  \"items\": [\n    {\n      \"ingredientId\": 1,\n      \"allocatedQuantity\": 10.0,\n      \"source\": \"LOCAL_STOCK\",\n      \"note\": \"Cấp phát ca sáng cho Bếp chính\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory/allocations/batch",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory", "allocations", "batch"]
+						}
+					}
+				},
+				{
+					"name": "7.7 Reconcile Batch (Kiểm kê hoàn kho cuối ngày)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"branchId\": {{current_branch_id}},\n  \"reconciliationDate\": \"2026-10-02\",\n  \"items\": [\n    {\n      \"allocationId\": 1,\n      \"actualRemaining\": 2.5,\n      \"returnToWarehouse\": 2.0,\n      \"lossReason\": \"Hao hụt sơ chế lọc mỡ gân\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory/allocations/reconcile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory", "allocations", "reconcile"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "8. HRM & Shift Management",
+			"description": "Lịch làm việc ca nhân viên, Check-in chấm công bằng FaceID/QR và Check-out",
+			"item": [
+				{
+					"name": "8.1 Get Shifts For Date",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/hrm/shifts?date=2026-10-02",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hrm", "shifts"],
+							"query": [
+								{ "key": "date", "value": "2026-10-02" }
+							]
+						}
+					}
+				},
+				{
+					"name": "8.2 Schedule Work Shift",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": 1,\n  \"branchId\": {{current_branch_id}},\n  \"shiftDate\": \"2026-10-02\",\n  \"scheduledStart\": \"2026-10-02T08:00:00+07:00\",\n  \"scheduledEnd\": \"2026-10-02T16:30:00+07:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/hrm/shifts",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hrm", "shifts"]
+						}
+					}
+				},
+				{
+					"name": "8.3 Check-in Shift",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/hrm/shifts/check-in?userId=1&method=FACE_ID",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hrm", "shifts", "check-in"],
+							"query": [
+								{ "key": "userId", "value": "1" },
+								{ "key": "method", "value": "FACE_ID" }
+							]
+						}
+					}
+				},
+				{
+					"name": "8.4 Check-out Shift",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/hrm/shifts/check-out?userId=1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hrm", "shifts", "check-out"],
+							"query": [
+								{ "key": "userId", "value": "1" }
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "9. Financial Reports",
+			"description": "Báo cáo doanh thu, giá vốn món ăn (Food Cost) theo chi nhánh",
+			"item": [
+				{
+					"name": "9.1 Daily Financial Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/financial/reports/daily-summary",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "financial", "reports", "daily-summary"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "10. Validation Test Scenarios (Negative Cases)",
+			"description": "Các kịch bản kiểm tra lỗi xác thực dữ liệu đầu vào (HTTP 400 Bad Request) để kiểm tra cấu trúc lỗi trả về Frontend dạng: { success: false, message: '...', data: { field: 'lỗi' } }",
+			"item": [
+				{
+					"name": "10.1 Lỗi Chi Nhánh: Thiếu trường bắt buộc & Số điện thoại sai",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Response contains validation errors map in data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(false);",
+									"    pm.expect(jsonData.data).to.be.an(\"object\");",
+									"    pm.expect(jsonData.data).to.have.property(\"name\");",
+									"    pm.expect(jsonData.data).to.have.property(\"phone\");",
+									"    console.log(\"Field errors returned to FE:\", jsonData.data);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"\",\n  \"name\": \"\",\n  \"address\": \"A\",\n  \"phone\": \"12345\",\n  \"email\": \"sai-dinh-dang-email\",\n  \"taxCode\": \"\",\n  \"managerName\": \"\",\n  \"totalTables\": 0\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/branches",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "branches"]
+						}
+					}
+				},
+				{
+					"name": "10.2 Lỗi Tạo Bàn: Tên rỗng & Sức chứa không hợp lệ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Response has capacity and name validation messages\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(false);",
+									"    pm.expect(jsonData.data).to.have.property(\"capacity\");",
+									"    pm.expect(jsonData.data).to.have.property(\"name\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"areaId\": 1,\n  \"name\": \"\",\n  \"capacity\": -5\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/tables",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "tables"]
+						}
+					}
+				},
+				{
+					"name": "10.3 Lỗi Menu: Giá bán âm & Tên món để trống",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Response has price and name validation messages\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property(\"price\");",
+									"    pm.expect(jsonData.data).to.have.property(\"name\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"categoryId\": 1,\n  \"name\": \"\",\n  \"price\": -50000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/menu/items",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "menu", "items"]
+						}
+					}
+				},
+				{
+					"name": "10.4 Lỗi Thanh Toán: Số tiền âm & Thiếu phương thức",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Response has amount and method errors\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property(\"amount\");",
+									"    pm.expect(jsonData.data).to.have.property(\"method\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": 1,\n  \"amount\": -1000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pos/payments",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "pos", "payments"]
+						}
+					}
+				},
+				{
+					"name": "10.5 Lỗi Đặt Bàn: Số khách bằng 0 & Số điện thoại sai",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Response has customerPhone and partySize errors\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property(\"customerPhone\");",
+									"    pm.expect(jsonData.data).to.have.property(\"partySize\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Branch-Id", "value": "{{current_branch_id}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tableId\": 1,\n  \"customerName\": \"\",\n  \"customerPhone\": \"12345\",\n  \"bookingTime\": \"2026-10-15T19:00:00+07:00\",\n  \"partySize\": 0\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/reservations/bookings",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "reservations", "bookings"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURA GOURMAND | Trải Nghiệm Ẩm Thực Tinh Hoa & Đặt Bàn Trực Tuyến</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Chào mừng đến với Aura Gourmand - Hệ thống nhà hàng ẩm thực 5 sao đỉnh cao. Khám phá thực đơn thượng hạng, danh sách chi nhánh sang trọng và trải nghiệm đặt bàn trực tuyến nhanh chóng, tiện lợi." />
+    <meta name="keywords" content="nhà hàng 5 sao, ẩm thực cao cấp, đặt bàn trực tuyến, fine dining, thực đơn điện tử, bò bít tết wagyu, hải sản cao cấp, aura gourmand" />
+    <meta name="author" content="Aura Gourmand Restaurant Group" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="restaurant" />
+    <meta property="og:title" content="AURA GOURMAND | Nghệ Thuật Ẩm Thực Đỉnh Cao" />
+    <meta property="og:description" content="Khám phá hương vị thượng hạng tại Aura Gourmand. Đặt bàn trực tuyến chỉ trong 1 phút, nhận xác nhận tức thì." />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80" />
+    <meta property="og:url" content="https://auragourmand.vn" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AURA GOURMAND | Đặt Bàn & Thực Đơn Điện Tử" />
+    <meta name="twitter:description" content="Trải nghiệm ẩm thực đẳng cấp tại chuỗi nhà hàng Aura Gourmand. Đặt chỗ ngay hôm nay." />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1600&q=80" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Schema.org JSON-LD Rich Snippet for Restaurant -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Aura Gourmand Restaurant Group",
+      "image": [
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80",
+        "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1600&q=80"
+      ],
+      "priceRange": "$$$$",
+      "servesCuisine": ["Fine Dining", "Modern European", "Steakhouse", "Asian Fusion"],
+      "hasMenu": "https://auragourmand.vn/#menu",
+      "acceptsReservations": "True",
+      "potentialAction": {
+        "@type": "ReserveAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://auragourmand.vn/#booking",
+          "inLanguage": "vi",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        },
+        "result": {
+          "@type": "FoodEstablishmentReservation",
+          "name": "Đặt bàn trực tuyến Aura Gourmand"
+        }
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

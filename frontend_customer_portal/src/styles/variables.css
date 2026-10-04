@@ -1,0 +1,65 @@
+:root {
+  /* Color Palette - Luxury Dark & Imperial Gold */
+  --bg-main: #0a0b0e;
+  --bg-surface: #12141a;
+  --bg-surface-elevated: #181b23;
+  --bg-card: rgba(24, 27, 35, 0.75);
+  --bg-card-hover: rgba(32, 36, 47, 0.9);
+  --bg-glass: rgba(18, 20, 26, 0.65);
+  --bg-glass-heavy: rgba(10, 11, 14, 0.85);
+
+  /* Gold & Warm Accents */
+  --gold-primary: #d4af37;
+  --gold-light: #f5e6a3;
+  --gold-dark: #aa820a;
+  --gold-gradient: linear-gradient(135deg, #fcedb9 0%, #d4af37 50%, #aa820a 100%);
+  --gold-gradient-subtle: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(170, 130, 10, 0.05) 100%);
+  --gold-glow: 0 0 25px rgba(212, 175, 55, 0.25);
+  --gold-glow-strong: 0 0 35px rgba(212, 175, 55, 0.45);
+
+  /* Functional Status Colors */
+  --color-success: #10b981;
+  --color-success-bg: rgba(16, 185, 129, 0.12);
+  --color-warning: #f59e0b;
+  --color-warning-bg: rgba(245, 158, 11, 0.12);
+  --color-danger: #ef4444;
+  --color-danger-bg: rgba(239, 68, 68, 0.12);
+  --color-info: #3b82f6;
+  --color-info-bg: rgba(59, 130, 246, 0.12);
+
+  /* Text Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-gold: #f3dfa2;
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-gold: rgba(212, 175, 55, 0.3);
+  --border-gold-hover: rgba(212, 175, 55, 0.6);
+
+  /* Typography */
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  /* Radii & Shadows */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+
+  /* Transitions */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Max Widths */
+  --container-width: 1280px;
+  --container-narrow: 1040px;
+}
