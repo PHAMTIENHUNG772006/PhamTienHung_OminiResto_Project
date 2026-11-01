@@ -363,6 +363,29 @@ export const apiService = {
     return MOCK_BRANCHES;
   },
 
+  async searchBranches(keyword: string): Promise<Branch[]> {
+    try {
+      const response = await fetch(`${API_BASE}/branches/search?keyword=${encodeURIComponent(keyword)}`, {
+        headers: { 'Accept': 'application/json' },
+      });
+      if (response.ok) {
+        const json: ApiResponse<Branch[]> = await response.json();
+        if (json.data && json.data.length > 0) {
+          return json.data.map(b => ({
+            ...b,
+            image: b.image || b.imageUrl || MOCK_BRANCHES.find(m => m.id === b.id)?.image || MOCK_BRANCHES[0].image,
+          }));
+        }
+      }
+    } catch (err) {
+      console.warn('Backend search unavailable or empty, fallback to client filter:', err);
+    }
+    const q = keyword.toLowerCase();
+    return MOCK_BRANCHES.filter(b =>
+      b.name.toLowerCase().includes(q) || b.address.toLowerCase().includes(q)
+    );
+  },
+
   // 2. Module Thực đơn điện tử
   async getCategories(): Promise<Category[]> {
     try {
